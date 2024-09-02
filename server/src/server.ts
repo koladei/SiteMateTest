@@ -41,6 +41,7 @@ app.delete("/issues/:id", (req: Request, res: Response) => {
   const issue = issues[issueIndex];
 
   if (issue) {
+    issues = issues.filter((i) => i.id != req.params.id);
     return res.json({ status: "success", message: "Issue has been deleted", issue });
   }
 
