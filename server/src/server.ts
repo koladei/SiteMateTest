@@ -8,6 +8,7 @@ type Issue = {
   id: number | string;
   title: string;
   description: string;
+  createdAt: Date
 };
 
 let issues: Issue[] = [];
@@ -29,6 +30,7 @@ app.post("/issues", (req: Request, res: Response) => {
   if (!issue.description) return res.json({ status: "failure", message: "The description field is required" });
 
   issue.id = uuidv4();
+  issue.createdAt =Date.now();
 
   // save to the database
   issues = [...issues, issue];
