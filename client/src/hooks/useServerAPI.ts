@@ -6,6 +6,7 @@ export type ServerAPI = {
   loading: boolean;
   loadCount: number;
   issues: Issue[];
+  deleteIssue: (id: string) => Promise<void>;
   getIssueById: (id: string) => Promise<void>;
   getIssues: (force?: true) => Promise<void>;
 };
@@ -22,6 +23,19 @@ export const useServerAPI = create<ServerAPI>((set, getState) => {
         if (status == "success") {
           const { issues } = getState();
           set({ issues: [...issues.filter((i) => i.id != issue.id), issue] });
+        }
+      } catch (e: unknown) {
+        console.log(e);
+      } finally {
+        set({ loading: false });
+      }
+    },
+    deleteIssue: async (id: string | number) => {
+      try {
+        const { status, issue } = (await axios.delete<{ issue: Issue; status: string }>(`/api/issues/${id}`)).data;
+        if (status == "success") {
+          const { issues } = getState();
+          set({ issues: [...issues.filter((i) => i.id != issue.id)] });
         }
       } catch (e: unknown) {
         console.log(e);

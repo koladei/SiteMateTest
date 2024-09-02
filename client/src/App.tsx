@@ -1,20 +1,18 @@
 import './App.css'
-import { Button, Container, Form, FormGroup, Input, Modal, ModalBody, ModalFooter, Table } from 'reactstrap'
+import { Button, Form, FormGroup, Input, Modal, ModalBody, ModalFooter } from 'reactstrap'
 import { Route, Routes } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useServerAPI } from './hooks/useServerAPI';
 
 function App() {
 
-  const { issues, getIssues } = useServerAPI(state => ({ issues: state.issues, getIssues: state.getIssues }));
+  const { issues, getIssues, deleteIssue } = useServerAPI(state => ({ issues: state.issues, getIssues: state.getIssues, deleteIssue: state.deleteIssue }));
 
   // get issues for the first time
   useEffect(() => {
     getIssues();
   }, [getIssues]);
 
-
-  // const issues: Issue[] = [];
 
   const HomePage = () => {
     const [showAddModal, setShowAddModal] = useState(false)
@@ -32,7 +30,7 @@ function App() {
             <td>{i}</td>
             <td>{issue.title}</td>
             <td>{issue.description}</td>
-            <td><Button>Delete</Button></td>
+            <td><Button onClick={() => deleteIssue(issue.id)}>Delete</Button></td>
           </tr>)
         }
       </table>
