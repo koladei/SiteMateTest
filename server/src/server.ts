@@ -48,6 +48,21 @@ app.delete("/issues/:id", (req: Request, res: Response) => {
   res.status(404).json({ status: "failure", message: "Issue does not exist" });
 });
 
+app.put("/issues/:id", (req: Request, res: Response) => {
+  const id = req.params.id;
+  const { title, description } = req.body;
+  // if the issue exists, get it
+  const issue = issues.filter((i) => i.id == id)?.[0];
+
+  if (issue) {
+    const newIssue = { ...issue, ...{ title, description } };
+    issues = [...issues.filter((i) => i.id != req.params.id), newIssue];
+    return res.json({ status: "success", issue: newIssue });
+  }
+
+  res.status(404).json({ status: "failure", message: "Issue does not exist" });
+});
+
 app.get("/issues/:id", (req: Request, res: Response) => {
   // if the issue exists, return it.
   const issue = issues.filter((i) => i.id == req.params.id)?.[0];
